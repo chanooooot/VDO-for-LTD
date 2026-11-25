@@ -13,10 +13,10 @@ If a user asked you to install this repo, follow these steps exactly. The user m
 1. **Do not** install it by copying a skill folder (for example with a skill-installer). That skips most of the bundle. Run the installer script below instead.
 2. Run this one command (it needs network access and writes outside the project, so request approval if your sandbox asks, and allow at least 10 minutes):
    ```bash
-   bash -c "$(curl -fsSL https://raw.githubusercontent.com/chanooooot/VDO-for-LTD/main/skills/vdo-for-ltd/install.sh)"
+   f="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/chanooooot/VDO-for-LTD/main/skills/vdo-for-ltd/install.sh -o "$f" && bash "$f"
    ```
    If the user needs to click "Approve" or "Allow", tell them in one short sentence what to click and why.
-3. Read the summary at the end of the output.
+3. Read the summary at the end of the output. If there is no output at all, or the download failed, the network was blocked: request network access and run step 2 again.
    - "All done": tell the user it worked, and that they should quit and reopen the app. After that they can just describe the video they want.
    - "npx not found": the user needs Node.js. Tell them: "Please open https://nodejs.org, download the LTS version, and double-click it to install, like any other app. Tell me when it's done." Then run step 2 again.
    - "everything works except video stabilisation": this is expected on Macs without Homebrew and counts as success. Do not try to fix it and do not mention it unless the user later asks to stabilise shaky footage.
@@ -40,12 +40,12 @@ Needs Node.js 18+. No Homebrew and no password needed. The installer also:
 
 - makes sure `python3` is 3.10+ (macOS ships 3.9): it uses a newer Python if you have one, or installs one (Homebrew if present, otherwise [pixi](https://pixi.sh) into `~/.pixi`), then points `python3` at it through `~/.local/bin`;
 - installs FFmpeg if missing (Homebrew `ffmpeg-full` if present, otherwise conda-forge FFmpeg through pixi, which has everything except video stabilisation);
-- adds the needed PATH lines to `~/.zshrc`.
+- adds the needed PATH lines to `~/.zprofile` and `~/.zshrc`.
 
 **Option A: one command in Terminal**
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/chanooooot/VDO-for-LTD/main/skills/vdo-for-ltd/install.sh)"
+f="$(mktemp)" && curl -fsSL https://raw.githubusercontent.com/chanooooot/VDO-for-LTD/main/skills/vdo-for-ltd/install.sh -o "$f" && bash "$f"
 ```
 
 This installs this repo's skills plus all the skills above, for both Codex (`~/.agents/skills`) and Claude Code (`~/.claude/skills`).

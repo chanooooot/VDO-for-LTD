@@ -23,7 +23,8 @@ add_to_path() {
   local dir="$1" marker="$2" rc
   export PATH="$dir:$PATH"
   local line="export PATH=\"$3:\$PATH\"  # added by VDO for LTD ($marker)"
-  for rc in "$HOME/.zshrc" "$HOME/.bash_profile"; do
+  # .zprofile: login shells (how agents usually run commands); .zshrc: interactive terminals
+  for rc in "$HOME/.zprofile" "$HOME/.zshrc" "$HOME/.bash_profile"; do
     [ "$rc" = "$HOME/.bash_profile" ] && [ ! -f "$rc" ] && continue
     grep -qsF "added by VDO for LTD ($marker)" "$rc" || printf '\n%s\n' "$line" >> "$rc"
   done
@@ -113,7 +114,14 @@ step "vdo-for-ltd" npx -y skills add chanooooot/VDO-for-LTD --skill '*' -g -a "$
 # 1. FFmpeg skill: installs the skill, installs FFmpeg if missing, then runs its doctor check.
 # The no-Homebrew FFmpeg (pixi/conda-forge) lacks only vid.stab (stabilisation): accept that.
 ffmpeg_skill() {
-  npx -y ffmpeg-skill setup && return 0
+  npx -y ffmpeg-skill setup
+  local rc=$?
+  # Homebrew's ffmpeg-full is keg-only: setup only puts it on PATH for itself, so persist it.
+  if ! command -v ffmpeg >/dev/null && have_brew; then
+    local keg; keg="$(brew --prefix ffmpeg-full 2>/dev/null)"
+    [ -x "$keg/bin/ffmpeg" ] && add_to_path "$keg/bin" "ffmpeg-full" "$keg/bin" && echo "    added $keg/bin to PATH"
+  fi
+  [ $rc -eq 0 ] && return 0
   local missing
   missing="$(npx -y ffmpeg-skill doctor 2>&1 | sed -n 's/^missing required: //p')"
   [ -n "$missing" ] || return 1
