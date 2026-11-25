@@ -29,19 +29,23 @@ If a user asked you to install this repo, follow these steps exactly. The user m
 | Skill | Source | What it does |
 |---|---|---|
 | ffmpeg-skill | [kajisho5/ffmpeg-skill](https://github.com/kajisho5/ffmpeg-skill) | Cut, trim, caption and convert video/audio with FFmpeg |
-| Remotion skills | [remotion-dev/skills](https://github.com/remotion-dev/skills) | Make videos in React with Remotion (all except `remotion-saas`, which is for web apps with browser/cloud rendering) |
+| HyperFrames (core skills) | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) | Make animated videos from HTML. Free and open source (Apache-2.0), no licence fees |
 | ponytail | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | Smallest-change coding mode |
 | grill-me + grilling | [mattpocock/skills](https://github.com/mattpocock/skills) | Interviews you to sharpen a plan |
 | video-kickoff | this repo | Before any video task, asks if you'd like a few planning questions first |
-| remotion-local-render | this repo | Renders Remotion videos on your Mac only: no browser or cloud rendering, checked by a script before every render |
+| hyperframes-local-render | this repo | Keeps HyperFrames on your Mac: local rendering only, no uploads, usage tracking off |
 
 ## Manual install
 
-Needs Node.js 18+. No Homebrew and no password needed. The installer also:
+Needs Node.js. No Homebrew and no password needed. The installer also:
+
+- installs Node.js 22 if yours is older (HyperFrames needs it);
+- turns off usage tracking (`HYPERFRAMES_NO_TELEMETRY=1`, `DO_NOT_TRACK=1`);
+- removes Remotion skills from earlier versions of this bundle;
 
 - makes sure `python3` is 3.10+ (macOS ships 3.9): it uses a newer Python if you have one, or installs one (Homebrew if present, otherwise [pixi](https://pixi.sh) into `~/.pixi`), then points `python3` at it through `~/.local/bin`;
 - installs FFmpeg if missing (Homebrew `ffmpeg-full` if present, otherwise conda-forge FFmpeg through pixi, which has everything except video stabilisation);
-- adds the needed PATH lines to `~/.zprofile` and `~/.zshrc`.
+- adds the needed lines to `~/.zprofile` and `~/.zshrc`.
 
 **Option A: one command in Terminal**
 

@@ -18,16 +18,20 @@ step() {
 command -v npx >/dev/null || { echo "npx not found. Install Node.js 18+ first: https://nodejs.org"; exit 1; }
 
 # ---- Helpers ----
-# Put DIR first on PATH now and in future shells (once per marker).
-add_to_path() {
-  local dir="$1" marker="$2" rc
-  export PATH="$dir:$PATH"
-  local line="export PATH=\"$3:\$PATH\"  # added by VDO for LTD ($marker)"
-  # .zprofile: login shells (how agents usually run commands); .zshrc: interactive terminals
+# Add LINE to every shell profile once (identified by MARKER).
+# .zprofile: login shells (how agents usually run commands); .zshrc: interactive terminals
+add_profile_line() {
+  local marker="$1" line="$2  # added by VDO for LTD ($1)" rc
   for rc in "$HOME/.zprofile" "$HOME/.zshrc" "$HOME/.bash_profile"; do
     [ "$rc" = "$HOME/.bash_profile" ] && [ ! -f "$rc" ] && continue
     grep -qsF "added by VDO for LTD ($marker)" "$rc" || printf '\n%s\n' "$line" >> "$rc"
   done
+}
+
+# Put DIR first on PATH now and in future shells.
+add_to_path() {
+  export PATH="$1:$PATH"
+  add_profile_line "$2" "export PATH=\"$3:\$PATH\""
 }
 
 # pixi installs FFmpeg/Python into ~/.pixi from conda-forge: no Homebrew, no password.
@@ -109,6 +113,29 @@ ensure_ffmpeg() {
   pixi_install ffmpeg && command -v ffmpeg >/dev/null && echo "    ✓ installed $(command -v ffmpeg)"
 }
 
+# ---- Node.js 22+ (HyperFrames needs it); without Homebrew, use pixi ----
+node_major() { node -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0; }
+ensure_node() {
+  echo ""
+  echo "==> Node.js 22+"
+  if [ "$(node_major)" -ge 22 ]; then
+    case "$(command -v node)" in "$PIXI_BIN"/*) add_to_path "$PIXI_BIN" "pixi" '$HOME/.pixi/bin' ;; esac
+    echo "    ✓ node $(node --version)"; return 0
+  fi
+  echo "    node $(node --version 2>/dev/null) is older than 22. Installing Node.js 22."
+  if have_brew; then
+    brew install node@22 && add_to_path "$(brew --prefix node@22)/bin" "node@22" "$(brew --prefix node@22)/bin"
+  else
+    pixi_install nodejs=22
+  fi
+  [ "$(node_major)" -ge 22 ] && echo "    ✓ node $(node --version)"
+}
+
+# ---- No usage tracking from HyperFrames (and other tools that honour DO_NOT_TRACK) ----
+export HYPERFRAMES_NO_TELEMETRY=1 DO_NOT_TRACK=1
+add_profile_line "no telemetry" "export HYPERFRAMES_NO_TELEMETRY=1 DO_NOT_TRACK=1"
+
+ensure_node || failed+=("node")
 ensure_python || failed+=("python")
 ensure_ffmpeg || failed+=("ffmpeg")
 
@@ -134,16 +161,11 @@ ffmpeg_skill() {
 }
 step "ffmpeg-skill" ffmpeg_skill
 
-# 2. Remotion skills (videos in React). Skip remotion-saas: it is for web apps and steers
-#    towards browser/cloud rendering; this bundle renders on the local Mac only.
-REMOTION_SKILLS=(remotion-best-practices remotion-captions remotion-create remotion-docs
-  remotion-elements remotion-interactivity remotion-license remotion-maps remotion-markup
-  remotion-multimedia remotion-render remotion-studio remotion-upgrade)
-step "remotion" npx -y skills add remotion-dev/skills --skill "${REMOTION_SKILLS[@]}" -g -a "${AGENTS[@]}" -y
-# Remove remotion-saas if an earlier install added it. The skills CLI leaves the shared
-# ~/.agents copy (Codex) and its lock entry behind, so delete those directly.
+# Remove skills this bundle no longer uses. The skills CLI leaves the shared ~/.agents copy
+# (Codex) and its lock entry behind, so delete those directly.
 remove_skill() {
   local name="$1"
+  [ -e "$HOME/.agents/skills/$name" ] || [ -e "$HOME/.claude/skills/$name" ] || return 0
   npx -y skills remove "$name" -g -a "${AGENTS[@]}" -y >/dev/null 2>&1 || true
   rm -rf "$HOME/.agents/skills/$name" "$HOME/.claude/skills/$name"
   local lock="$HOME/.agents/.skill-lock.json"
@@ -158,9 +180,19 @@ skills = data.get("skills")
 if isinstance(skills, dict) and skills.pop(name, None) is not None:
     json.dump(data, open(path, "w"), indent=2)
 PY
-  return 0
+  echo "    removed old skill: $name"
 }
-remove_skill remotion-saas
+# Remotion was replaced by HyperFrames (no licence risk).
+for old in remotion-best-practices remotion-captions remotion-create remotion-docs remotion-elements \
+           remotion-interactivity remotion-license remotion-maps remotion-markup remotion-multimedia \
+           remotion-render remotion-saas remotion-studio remotion-upgrade remotion-local-render; do
+  remove_skill "$old"
+done
+
+# 2. HyperFrames core skills (HTML -> MP4, Apache-2.0)
+HF_SKILLS=(hyperframes hyperframes-cli hyperframes-registry media-use reverse-any-video style-sampling)
+step "hyperframes" npx -y skills add heygen-com/hyperframes --skill "${HF_SKILLS[@]}" -g -a "${AGENTS[@]}" -y
+npx -y hyperframes telemetry disable >/dev/null 2>&1 || true
 
 # 3. Ponytail (smallest-change coding mode)
 step "ponytail" npx -y skills add DietrichGebert/ponytail --skill '*' -g -a "${AGENTS[@]}" -y

@@ -1,0 +1,3 @@
+interface:
+  display_name: "HyperFrames local only"
+  short_description: "Make HyperFrames videos on this Mac only, no uploads or tracking"

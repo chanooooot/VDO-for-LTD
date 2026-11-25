@@ -1,6 +1,6 @@
 ---
 name: vdo-for-ltd
-description: Installs or updates the VDO for LTD video-making skill set (ffmpeg-skill, Remotion skills, ponytail, grill-me). Use only when the user explicitly asks to install, set up or update this bundle or the video skills.
+description: Installs or updates the VDO for LTD video-making skill set (ffmpeg-skill, HyperFrames, ponytail, grill-me). Use only when the user explicitly asks to install, set up or update this bundle or the video skills.
 disable-model-invocation: true
 ---
 
@@ -11,16 +11,16 @@ Works in Codex and Claude Code. Installs these skill sets globally for both agen
 | Skill | Source | What it does |
 |---|---|---|
 | ffmpeg-skill | kajisho5/ffmpeg-skill | Cut, trim, caption and convert video/audio with FFmpeg |
-| Remotion skills | remotion-dev/skills | Make videos in React with Remotion |
+| HyperFrames | heygen-com/hyperframes | Make animated videos from HTML (free, Apache-2.0) |
 | ponytail | DietrichGebert/ponytail | Smallest-change coding mode, keeps generated code lean |
 | grill-me + grilling | mattpocock/skills | Interviews you to sharpen a video plan before building |
 | video-kickoff | this repo | Asks "want me to interview you first?" before any video task |
-| remotion-local-render | this repo | Renders Remotion videos on this Mac only: no browser or cloud rendering |
+| hyperframes-local-render | this repo | Keeps HyperFrames on this Mac: local rendering, no uploads, no tracking |
 
 ## Steps
 
-1. Tell the user, in plain friendly words, what will be installed (the table above), and that the installer may also set up FFmpeg and a newer Python if they are missing. No password is needed: without Homebrew it uses pixi, installed into `~/.pixi`. It adds a few PATH lines to `~/.zprofile` and `~/.zshrc`. Ask them to confirm and wait for the answer.
-2. Check `node --version` (needs 18+). If Node is missing, tell them to install it from https://nodejs.org and stop.
+1. Tell the user, in plain friendly words, what will be installed (the table above), and that the installer may also set up FFmpeg, Node.js 22 and a newer Python if they are missing, turns off usage tracking, and removes old Remotion skills. No password is needed: without Homebrew it uses pixi, installed into `~/.pixi`. It adds a few PATH lines to `~/.zprofile` and `~/.zshrc`. Ask them to confirm and wait for the answer.
+2. Check `node --version`. If Node is missing, tell them to install it from https://nodejs.org and stop.
 3. Run `install.sh` from the same folder as this SKILL.md:
    ```bash
    bash "<folder containing this SKILL.md>/install.sh"

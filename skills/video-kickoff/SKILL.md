@@ -1,6 +1,6 @@
 ---
 name: video-kickoff
-description: Offers a short planning interview before starting any video work. Use when the user asks to make, create, edit, cut, caption, animate or render a video or clip, with Remotion, FFmpeg or anything else, and has not already given a detailed plan.
+description: Offers a short planning interview before starting any video work. Use when the user asks to make, create, edit, cut, caption, animate or render a video or clip, with HyperFrames, FFmpeg or anything else, and has not already given a detailed plan.
 ---
 
 # Video kickoff
@@ -30,7 +30,7 @@ If the grilling skill is not installed, run the same interview yourself, a few q
 
 When the interview is done, sum up the plan in a short list, confirm it, then build the video.
 
-For Remotion videos, always follow the `remotion-local-render` skill: render on this Mac only.
+For animated videos use HyperFrames (not Remotion), and always follow the `hyperframes-local-render` skill: everything stays on this Mac.
 
 ## If they choose 2
 
