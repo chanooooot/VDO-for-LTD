@@ -65,6 +65,8 @@ ensure_python() {
   echo ""
   echo "==> Python 3.10+"
   if command -v python3 >/dev/null && py_ok python3; then
+    # Our link from an earlier run: make sure every shell profile has the PATH line.
+    [ -L "$HOME/.local/bin/python3" ] && add_to_path "$HOME/.local/bin" "python3 >= 3.10" '$HOME/.local/bin'
     echo "    ✓ python3 is $(python3 --version 2>&1)"; return 0
   fi
 
@@ -97,6 +99,8 @@ ensure_ffmpeg() {
   echo ""
   echo "==> FFmpeg"
   if command -v ffmpeg >/dev/null && command -v ffprobe >/dev/null; then
+    # Installed by pixi in an earlier run: make sure every shell profile has the PATH line.
+    case "$(command -v ffmpeg)" in "$PIXI_BIN"/*) add_to_path "$PIXI_BIN" "pixi" '$HOME/.pixi/bin' ;; esac
     echo "    ✓ found $(command -v ffmpeg)"; return 0
   fi
   if have_brew || [ "$(uname)" != "Darwin" ]; then
@@ -136,8 +140,27 @@ REMOTION_SKILLS=(remotion-best-practices remotion-captions remotion-create remot
   remotion-elements remotion-interactivity remotion-license remotion-maps remotion-markup
   remotion-multimedia remotion-render remotion-studio remotion-upgrade)
 step "remotion" npx -y skills add remotion-dev/skills --skill "${REMOTION_SKILLS[@]}" -g -a "${AGENTS[@]}" -y
-# Remove remotion-saas if an earlier install added it (ignore "not installed").
-npx -y skills remove remotion-saas -g -a "${AGENTS[@]}" -y >/dev/null 2>&1 || true
+# Remove remotion-saas if an earlier install added it. The skills CLI leaves the shared
+# ~/.agents copy (Codex) and its lock entry behind, so delete those directly.
+remove_skill() {
+  local name="$1"
+  npx -y skills remove "$name" -g -a "${AGENTS[@]}" -y >/dev/null 2>&1 || true
+  rm -rf "$HOME/.agents/skills/$name" "$HOME/.claude/skills/$name"
+  local lock="$HOME/.agents/.skill-lock.json"
+  [ -f "$lock" ] && python3 - "$lock" "$name" <<'PY'
+import json, sys
+path, name = sys.argv[1], sys.argv[2]
+try:
+    data = json.load(open(path))
+except Exception:
+    sys.exit(0)
+skills = data.get("skills")
+if isinstance(skills, dict) and skills.pop(name, None) is not None:
+    json.dump(data, open(path, "w"), indent=2)
+PY
+  return 0
+}
+remove_skill remotion-saas
 
 # 3. Ponytail (smallest-change coding mode)
 step "ponytail" npx -y skills add DietrichGebert/ponytail --skill '*' -g -a "${AGENTS[@]}" -y
