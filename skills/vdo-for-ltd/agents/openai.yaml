@@ -1,0 +1,5 @@
+interface:
+  display_name: "VDO for LTD installer"
+  short_description: "Install or update the video-making skill set"
+policy:
+  allow_implicit_invocation: false

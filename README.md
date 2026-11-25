@@ -1,6 +1,6 @@
 # VDO for LTD
 
-One skill that installs a set of video-making skills for Claude Code.
+A set of video-making skills for **Codex** and **Claude Code**, installed with one command.
 
 | Skill | Source | What it does |
 |---|---|---|
@@ -14,28 +14,36 @@ One skill that installs a set of video-making skills for Claude Code.
 
 Needs Node.js 18+ and Python 3.10+.
 
-**Option A: through Claude Code**
-
-```bash
-npx skills add chanooooot/VDO-for-LTD --skill '*' -g -a claude-code -y
-```
-
-Restart Claude Code, then type `/vdo-for-ltd`. Claude checks your machine and installs everything.
-
-After that, just describe the video you want. Claude asks whether you'd like it to interview you about the details first. Pick "yes" if you're not sure exactly what you want.
-
-**Option B: run the script yourself**
+**Option A: one script (simplest)**
 
 ```bash
 git clone https://github.com/chanooooot/VDO-for-LTD.git
 bash VDO-for-LTD/skills/vdo-for-ltd/install.sh
 ```
 
-Every skill installs globally into `~/.claude/skills`. To target another agent, set `VDO_AGENT`, for example `VDO_AGENT=cursor`.
+This installs this repo's skills plus all the skills above, for both Codex (`~/.agents/skills`) and Claude Code (`~/.claude/skills`).
+
+**Option B: through your agent**
+
+```bash
+npx skills add chanooooot/VDO-for-LTD --skill '*' -g -a codex claude-code -y
+```
+
+Restart your agent, then ask it to run the installer:
+- Codex: type `$vdo-for-ltd`, or pick it from `/skills`
+- Claude Code: type `/vdo-for-ltd`
+
+The agent checks your machine and installs everything else.
+
+To install for other agents, set `VDO_AGENTS`, for example `VDO_AGENTS="codex cursor" bash install.sh`.
+
+## Using it
+
+Just describe the video you want. The agent asks whether you'd like it to interview you about the details first. Pick "yes" if you're not sure exactly what you want.
 
 ## Update
 
-Run `/vdo-for-ltd` again, or re-run `install.sh`.
+Re-run `install.sh`, or the installer skill.
 
 ## Credits
 
