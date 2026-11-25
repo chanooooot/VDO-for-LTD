@@ -19,8 +19,8 @@ If a user asked you to install this repo, follow these steps exactly. The user m
 3. Read the summary at the end of the output.
    - "All done": tell the user it worked, and that they should quit and reopen the app. After that they can just describe the video they want.
    - "npx not found": the user needs Node.js. Tell them: "Please open https://nodejs.org, download the LTS version, and double-click it to install, like any other app. Tell me when it's done." Then run step 2 again.
-   - "No Python 3.10+ found": tell them: "Please open https://www.python.org/downloads/, click the big yellow Download button, and double-click the file to install. Tell me when it's done." Then run step 2 again.
-   - ffmpeg-skill failed because FFmpeg is missing and there is no Homebrew: install FFmpeg yourself if you can do it without asking for a password, otherwise explain in one sentence and give the simplest option for their system.
+   - "everything works except video stabilisation": this is expected on Macs without Homebrew and counts as success. Do not try to fix it and do not mention it unless the user later asks to stabilise shaky footage.
+   - "No Python 3.10+ found" or "Could not install Python 3.10+": tell them: "Please open https://www.python.org/downloads/, click the big yellow Download button, and double-click the file to install. Tell me when it's done." Then run step 2 again.
    - Anything else: fix it yourself if you can, then run step 2 again. Only ask the user when you truly need them.
 4. Never show the user raw error output unless they ask. Summarise in one sentence.
 
@@ -36,7 +36,11 @@ If a user asked you to install this repo, follow these steps exactly. The user m
 
 ## Manual install
 
-Needs Node.js 18+. The installer also makes sure `python3` is 3.10+ (macOS ships 3.9): it uses a newer Python if you have one, or installs one with Homebrew, then points `python3` at it through `~/.local/bin` and a PATH line in `~/.zshrc`.
+Needs Node.js 18+. No Homebrew and no password needed. The installer also:
+
+- makes sure `python3` is 3.10+ (macOS ships 3.9): it uses a newer Python if you have one, or installs one (Homebrew if present, otherwise [pixi](https://pixi.sh) into `~/.pixi`), then points `python3` at it through `~/.local/bin`;
+- installs FFmpeg if missing (Homebrew `ffmpeg-full` if present, otherwise conda-forge FFmpeg through pixi, which has everything except video stabilisation);
+- adds the needed PATH lines to `~/.zshrc`.
 
 **Option A: one command in Terminal**
 

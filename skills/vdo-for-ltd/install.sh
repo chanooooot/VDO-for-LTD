@@ -17,6 +17,32 @@ step() {
 
 command -v npx >/dev/null || { echo "npx not found. Install Node.js 18+ first: https://nodejs.org"; exit 1; }
 
+# ---- Helpers ----
+# Put DIR first on PATH now and in future shells (once per marker).
+add_to_path() {
+  local dir="$1" marker="$2" rc
+  export PATH="$dir:$PATH"
+  local line="export PATH=\"$3:\$PATH\"  # added by VDO for LTD ($marker)"
+  for rc in "$HOME/.zshrc" "$HOME/.bash_profile"; do
+    [ "$rc" = "$HOME/.bash_profile" ] && [ ! -f "$rc" ] && continue
+    grep -qsF "added by VDO for LTD ($marker)" "$rc" || printf '\n%s\n' "$line" >> "$rc"
+  done
+}
+
+# pixi installs FFmpeg/Python into ~/.pixi from conda-forge: no Homebrew, no password.
+PIXI_BIN="$HOME/.pixi/bin"
+pixi_install() {
+  if [ ! -x "$PIXI_BIN/pixi" ]; then
+    echo "    Installing pixi (no password needed) into ~/.pixi"
+    curl -fsSL https://pixi.sh/install.sh | PIXI_NO_PATH_UPDATE=1 bash >/dev/null || return 1
+  fi
+  echo "    pixi global install $*"
+  "$PIXI_BIN/pixi" global install "$@" || return 1
+  add_to_path "$PIXI_BIN" "pixi" '$HOME/.pixi/bin'
+}
+
+have_brew() { [ "$(uname)" = "Darwin" ] && command -v brew >/dev/null; }
+
 # ---- Python 3.10+ as `python3` (ffmpeg-skill and the agents only call `python3`) ----
 py_ok() { "$1" -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 10) else 1)' 2>/dev/null; }
 
@@ -27,7 +53,8 @@ find_python() {
   done
   for c in /opt/homebrew/bin/python3.1[0-9] /usr/local/bin/python3.1[0-9] \
            /opt/homebrew/bin/python3 /usr/local/bin/python3 \
-           /Library/Frameworks/Python.framework/Versions/3.1[0-9]/bin/python3; do
+           /Library/Frameworks/Python.framework/Versions/3.1[0-9]/bin/python3 \
+           "$PIXI_BIN"/python3.1[0-9]; do
     [ -x "$c" ] && py_ok "$c" && { echo "$c"; return 0; }
   done
   return 1
@@ -42,37 +69,58 @@ ensure_python() {
 
   local py
   py="$(find_python)"
-  if [ -z "$py" ] && [ "$(uname)" = "Darwin" ] && command -v brew >/dev/null; then
-    echo "    python3 is older than 3.10. Installing Python with Homebrew:"
-    echo "    brew install python@3.13"
-    brew install python@3.13 && py="$(find_python)"
+  if [ -z "$py" ]; then
+    echo "    python3 is older than 3.10. Installing a newer Python."
+    if have_brew; then
+      echo "    brew install python@3.13"
+      brew install python@3.13
+    else
+      pixi_install python=3.13
+    fi
+    py="$(find_python)"
   fi
   if [ -z "$py" ]; then
-    echo "    ✗ No Python 3.10+ found. Install it from https://www.python.org/downloads/ and run this script again."
+    echo "    ✗ Could not install Python 3.10+. Install it from https://www.python.org/downloads/ and run this script again."
     return 1
   fi
 
   # Point `python3` at the new Python via ~/.local/bin, placed first on PATH.
   mkdir -p "$HOME/.local/bin"
   ln -sf "$py" "$HOME/.local/bin/python3"
-  export PATH="$HOME/.local/bin:$PATH"
-  local line='export PATH="$HOME/.local/bin:$PATH"  # added by VDO for LTD (python3 >= 3.10)'
-  local rc
-  for rc in "$HOME/.zshrc" "$HOME/.bash_profile"; do
-    [ "$rc" = "$HOME/.bash_profile" ] && [ ! -f "$rc" ] && continue
-    grep -qs "added by VDO for LTD" "$rc" || printf '\n%s\n' "$line" >> "$rc"
-  done
+  add_to_path "$HOME/.local/bin" "python3 >= 3.10" '$HOME/.local/bin'
   echo "    ✓ python3 now points to $py ($(python3 --version 2>&1))"
-  echo "      (symlink in ~/.local/bin, PATH line added to ~/.zshrc)"
+}
+
+# ---- FFmpeg: with Homebrew, ffmpeg-skill installs ffmpeg-full itself; without it, use pixi ----
+ensure_ffmpeg() {
+  echo ""
+  echo "==> FFmpeg"
+  if command -v ffmpeg >/dev/null && command -v ffprobe >/dev/null; then
+    echo "    ✓ found $(command -v ffmpeg)"; return 0
+  fi
+  if have_brew || [ "$(uname)" != "Darwin" ]; then
+    echo "    ffmpeg-skill setup will install it"; return 0
+  fi
+  pixi_install ffmpeg && command -v ffmpeg >/dev/null && echo "    ✓ installed $(command -v ffmpeg)"
 }
 
 ensure_python || failed+=("python")
+ensure_ffmpeg || failed+=("ffmpeg")
 
 # 0. This bundle's own skills (vdo-for-ltd installer + video-kickoff)
 step "vdo-for-ltd" npx -y skills add chanooooot/VDO-for-LTD --skill '*' -g -a "${AGENTS[@]}" -y
 
-# 1. FFmpeg skill: installs the skill, installs FFmpeg if missing, then runs its doctor check
-step "ffmpeg-skill" npx -y ffmpeg-skill setup
+# 1. FFmpeg skill: installs the skill, installs FFmpeg if missing, then runs its doctor check.
+# The no-Homebrew FFmpeg (pixi/conda-forge) lacks only vid.stab (stabilisation): accept that.
+ffmpeg_skill() {
+  npx -y ffmpeg-skill setup && return 0
+  local missing
+  missing="$(npx -y ffmpeg-skill doctor 2>&1 | sed -n 's/^missing required: //p')"
+  [ -n "$missing" ] || return 1
+  echo "$missing" | tr ',' '\n' | sed 's/^ *//' | grep -qv '^filter:vidstab' && return 1
+  echo "    note: everything works except video stabilisation (this FFmpeg build has no vid.stab)."
+}
+step "ffmpeg-skill" ffmpeg_skill
 
 # 2. Remotion skills (videos in React)
 step "remotion" npx -y skills add remotion-dev/skills --skill '*' -g -a "${AGENTS[@]}" -y
