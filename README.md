@@ -12,7 +12,7 @@ A set of video-making skills for **Codex** and **Claude Code**, installed with o
 
 ## Install
 
-Needs Node.js 18+ and Python 3.10+.
+Needs Node.js 18+. The installer also makes sure `python3` is 3.10+ (macOS ships 3.9): it uses a newer Python if you have one, or installs one with Homebrew, then points `python3` at it through `~/.local/bin` and a PATH line in `~/.zshrc`.
 
 **Option A: one script (simplest)**
 

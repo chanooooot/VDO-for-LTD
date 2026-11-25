@@ -18,8 +18,12 @@ Works in Codex and Claude Code. Installs these skill sets globally for both agen
 
 ## Steps
 
-1. Tell the user what will be installed (the table above). Mention that `ffmpeg-skill setup` may install FFmpeg itself through Homebrew, winget or apt if it is missing, which can take a few minutes. Ask them to confirm and wait for the answer.
-2. Check prerequisites: `node --version` (needs 18+) and `python3 --version` (ffmpeg-skill needs 3.10+). If either is missing, tell them how to install it and stop.
+1. Tell the user what will be installed (the table above), and that the installer may also:
+   - install FFmpeg (Homebrew, winget or apt) if it is missing, which can take a few minutes;
+   - make sure `python3` is version 3.10+ (ffmpeg-skill needs it). If `python3` is older but a newer Python exists, it links `~/.local/bin/python3` to it and adds `~/.local/bin` to PATH in `~/.zshrc`. On a Mac with no newer Python, it runs `brew install python@3.13` first.
+
+   Ask them to confirm and wait for the answer.
+2. Check `node --version` (needs 18+). If Node is missing, tell them to install it from https://nodejs.org and stop.
 3. Run `install.sh` from the same folder as this SKILL.md:
    ```bash
    bash "<folder containing this SKILL.md>/install.sh"
