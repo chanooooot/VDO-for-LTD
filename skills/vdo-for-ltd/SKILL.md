@@ -14,6 +14,7 @@ This bundle installs four skill sets for making videos:
 | Remotion skills | remotion-dev/skills | Make videos in React with Remotion |
 | ponytail | DietrichGebert/ponytail | Smallest-change coding mode, keeps generated code lean |
 | grill-me + grilling | mattpocock/skills | Interviews you to sharpen a video plan before building |
+| video-kickoff | this repo | Asks "want me to interview you first?" before any video task |
 
 ## Steps
 
@@ -25,6 +26,6 @@ This bundle installs four skill sets for making videos:
    ```
    Use a timeout of at least 10 minutes.
 4. Report which steps passed and which failed, using the summary at the end of the output. For a failure, show the relevant error lines and suggest the fix.
-5. Tell the user to restart Claude Code, then try `/grill-me` to plan a video, or ask for a Remotion or FFmpeg task.
+5. Tell the user to restart Claude Code, then just describe the video they want. Claude will offer to ask them a few planning questions first.
 
 To update later, run the same installer again.
