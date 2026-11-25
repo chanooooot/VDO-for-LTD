@@ -130,8 +130,14 @@ ffmpeg_skill() {
 }
 step "ffmpeg-skill" ffmpeg_skill
 
-# 2. Remotion skills (videos in React)
-step "remotion" npx -y skills add remotion-dev/skills --skill '*' -g -a "${AGENTS[@]}" -y
+# 2. Remotion skills (videos in React). Skip remotion-saas: it is for web apps and steers
+#    towards browser/cloud rendering; this bundle renders on the local Mac only.
+REMOTION_SKILLS=(remotion-best-practices remotion-captions remotion-create remotion-docs
+  remotion-elements remotion-interactivity remotion-license remotion-maps remotion-markup
+  remotion-multimedia remotion-render remotion-studio remotion-upgrade)
+step "remotion" npx -y skills add remotion-dev/skills --skill "${REMOTION_SKILLS[@]}" -g -a "${AGENTS[@]}" -y
+# Remove remotion-saas if an earlier install added it (ignore "not installed").
+npx -y skills remove remotion-saas -g -a "${AGENTS[@]}" -y >/dev/null 2>&1 || true
 
 # 3. Ponytail (smallest-change coding mode)
 step "ponytail" npx -y skills add DietrichGebert/ponytail --skill '*' -g -a "${AGENTS[@]}" -y
