@@ -165,9 +165,10 @@ step "ffmpeg-skill" ffmpeg_skill
 # (Codex) and its lock entry behind, so delete those directly.
 remove_skill() {
   local name="$1"
-  [ -e "$HOME/.agents/skills/$name" ] || [ -e "$HOME/.claude/skills/$name" ] || return 0
+  local claude="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/skills/$name"
+  [ -e "$HOME/.agents/skills/$name" ] || [ -e "$claude" ] || [ -L "$claude" ] || return 0
   npx -y skills remove "$name" -g -a "${AGENTS[@]}" -y >/dev/null 2>&1 || true
-  rm -rf "$HOME/.agents/skills/$name" "$HOME/.claude/skills/$name"
+  rm -rf "$HOME/.agents/skills/$name" "$claude"
   local lock="$HOME/.agents/.skill-lock.json"
   [ -f "$lock" ] && python3 - "$lock" "$name" <<'PY'
 import json, sys
