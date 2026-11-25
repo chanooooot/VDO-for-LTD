@@ -6,6 +6,36 @@ A set of video-making skills for **Codex** and **Claude Code**, installed with o
 
 > Install this for me: https://github.com/chanooooot/VDO-for-LTD
 
+## How it works
+
+```mermaid
+flowchart TD
+    A(["🔗 Paste the repo link into Codex"]):::start --> B["🤖 Codex runs the installer"]:::agent
+    B --> C{"🧰 Anything missing?"}:::check
+    C -- "Node · Python · FFmpeg" --> D["📦 Installs it for you<br/>no password needed"]:::setup
+    C -- "All good" --> E
+    D --> E["✨ Skills ready<br/>FFmpeg · HyperFrames · grill-me · ponytail"]:::ready
+    E --> F(["💬 'Make me a video about…'"]):::start
+    F --> G{"🎤 Interview me first?"}:::check
+    G -- "Yes" --> H["📝 A few easy questions<br/>purpose · length · look · music"]:::agent
+    G -- "No, just start" --> I
+    H --> I{"🎬 What kind of video?"}:::check
+    I -- "Edit my clips" --> J["✂️ FFmpeg<br/>cut · trim · captions · music"]:::tool
+    I -- "Animated video" --> K["🎨 HyperFrames<br/>titles · motion graphics · charts"]:::tool
+    J --> L["🔒 Rendered on your Mac<br/>no uploads · no tracking"]:::safe
+    K --> L
+    L --> M(["🎉 Your MP4 is ready"]):::done
+
+    classDef start fill:#7c3aed,stroke:#5b21b6,color:#fff,stroke-width:2px
+    classDef agent fill:#2563eb,stroke:#1e40af,color:#fff
+    classDef check fill:#f59e0b,stroke:#b45309,color:#111
+    classDef setup fill:#0891b2,stroke:#0e7490,color:#fff
+    classDef ready fill:#16a34a,stroke:#15803d,color:#fff
+    classDef tool fill:#db2777,stroke:#9d174d,color:#fff
+    classDef safe fill:#334155,stroke:#0f172a,color:#fff
+    classDef done fill:#22c55e,stroke:#15803d,color:#111,stroke-width:3px
+```
+
 ## Instructions for AI agents installing this
 
 If a user asked you to install this repo, follow these steps exactly. The user may not be technical: use plain, friendly words, no jargon, and never ask them to edit files or type commands.
