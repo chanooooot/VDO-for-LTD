@@ -15,6 +15,7 @@ Works in Codex and Claude Code. Installs these skill sets globally for both agen
 | ponytail | DietrichGebert/ponytail | Smallest-change coding mode, keeps generated code lean |
 | grill-me + grilling | mattpocock/skills | Interviews you to sharpen a video plan before building |
 | video-kickoff | this repo | Asks "want me to interview you first?" before any video task |
+| remotion-local-render | this repo | Renders Remotion videos on this Mac only: no browser or cloud rendering |
 
 ## Steps
 

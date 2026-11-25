@@ -33,6 +33,7 @@ If a user asked you to install this repo, follow these steps exactly. The user m
 | ponytail | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | Smallest-change coding mode |
 | grill-me + grilling | [mattpocock/skills](https://github.com/mattpocock/skills) | Interviews you to sharpen a plan |
 | video-kickoff | this repo | Before any video task, asks if you'd like a few planning questions first |
+| remotion-local-render | this repo | Renders Remotion videos on your Mac only: no browser or cloud rendering |
 
 ## Manual install
 

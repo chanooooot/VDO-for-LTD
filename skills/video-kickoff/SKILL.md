@@ -30,6 +30,8 @@ If the grilling skill is not installed, run the same interview yourself, a few q
 
 When the interview is done, sum up the plan in a short list, confirm it, then build the video.
 
+For Remotion videos, always follow the `remotion-local-render` skill: render on this Mac only.
+
 ## If they choose 2
 
 Start right away using sensible defaults, and state the defaults you picked in one short line.
