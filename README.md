@@ -18,8 +18,11 @@ flowchart TD
     E --> F(["💬 'Make me a video about…'"]):::start
     F --> G{"🎤 Interview me first?"}:::check
     G -- "Yes" --> H["📝 A few easy questions<br/>purpose · length · look · music"]:::agent
-    G -- "No, just start" --> I
-    H --> I{"🎬 What kind of video?"}:::check
+    G -- "No, just start" --> S
+    H --> S["🎞️ Two storyboards<br/>Option A vs Option B"]:::agent
+    S --> P{"👉 Pick A, B or a mix"}:::check
+    P -- "Tweak it" --> S
+    P -- "Looks good" --> I{"🎬 What kind of video?"}:::check
     I -- "Edit my clips" --> J["✂️ FFmpeg<br/>cut · trim · captions · music"]:::tool
     I -- "Animated video" --> K["🎨 HyperFrames<br/>titles · motion graphics · charts"]:::tool
     J --> L["🔒 Rendered on your Mac<br/>no uploads · no tracking"]:::safe
@@ -62,7 +65,7 @@ If a user asked you to install this repo, follow these steps exactly. The user m
 | HyperFrames (core skills) | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) | Make animated videos from HTML. Free and open source (Apache-2.0), no licence fees |
 | ponytail (main skill only) | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | Smallest-change coding mode: lean code and replies |
 | grill-me + grilling | [mattpocock/skills](https://github.com/mattpocock/skills) | Interviews you to sharpen a plan |
-| video-kickoff | this repo | Before any video task, asks if you'd like a few planning questions first, and keeps the work lean on tokens (few frame checks, live preview instead of repeated renders, short replies) |
+| video-kickoff | this repo | Before any video task, asks if you'd like a few planning questions first, proposes two storyboards to pick from before building, and keeps the work lean on tokens (few frame checks, live preview instead of repeated renders, short replies) |
 | hyperframes-local-render | this repo | Keeps HyperFrames on your Mac: local rendering only, no uploads, usage tracking off |
 
 ## Manual install
@@ -102,6 +105,8 @@ To install for other agents, set `VDO_AGENTS`, for example `VDO_AGENTS="codex cu
 ## Using it
 
 Just describe the video you want. The agent asks whether you'd like it to interview you about the details first. Pick "yes" if you're not sure exactly what you want.
+
+Before building a new video, it shows two storyboards (scene-by-scene plans). Pick A, B, or a mix like "B, but with A's music", and it builds that one.
 
 ## Update
 

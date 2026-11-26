@@ -28,11 +28,35 @@ Follow the `grilling` skill. Load it the way your agent loads skills (for exampl
 
 If the grilling skill is not installed, run the same interview yourself, a few questions at a time.
 
-When the interview is done, sum up the plan in a short list, confirm it, then build the video.
+When the interview is done, sum up the plan in a short list and confirm it. Then propose storyboards (below).
 
 ## If they choose 2
 
-Start right away using sensible defaults, and state the defaults you picked in one short line.
+Pick sensible defaults and state them in one short line. Then propose storyboards (below).
+
+## Storyboards: two options before building
+
+For any new video or animation, before writing any code or rendering, offer two different storyboards and let the user pick. Skip this only for simple edits of existing clips (trim, cut, convert, resize, add captions or music to one clip).
+
+- Make the two options really different (for example calm and clean vs. bold and fast), not small variations.
+- Text only: no images, no renders, no code yet.
+- Keep each option short: a one-line style summary, then one row per scene.
+
+Format:
+
+> **Option A: Clean & calm** (15 s, 9:16, soft piano)
+> | # | Time | What you see | Text on screen |
+> |---|---|---|---|
+> | 1 | 0–3 s | Logo fades in on white | — |
+> | 2 | 3–9 s | Product photo slides in | "Fresh every morning" |
+> | 3 | 9–15 s | Shop address and opening hours | "Open 7am–6pm" |
+>
+> **Option B: Bold & fast** (15 s, 9:16, upbeat drums)
+> | … same format … |
+>
+> Which one do you like: A, B, or a mix (for example "B, but with A's music")?
+
+Wait for the answer. If they want changes, update only the chosen storyboard and show it again. Build the video only after they say it's good.
 
 ## Working rules (every video task)
 

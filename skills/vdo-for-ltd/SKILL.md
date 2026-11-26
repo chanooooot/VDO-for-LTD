@@ -14,7 +14,7 @@ Works in Codex and Claude Code. Installs these skill sets globally for both agen
 | HyperFrames | heygen-com/hyperframes | Make animated videos from HTML (free, Apache-2.0) |
 | ponytail (main skill only) | DietrichGebert/ponytail | Smallest-change coding mode, keeps generated code and replies lean |
 | grill-me + grilling | mattpocock/skills | Interviews you to sharpen a video plan before building |
-| video-kickoff | this repo | Asks "want me to interview you first?" before any video task, and keeps video work lean on tokens |
+| video-kickoff | this repo | Asks "want me to interview you first?" before any video task, offers two storyboards before building, and keeps video work lean on tokens |
 | hyperframes-local-render | this repo | Keeps HyperFrames on this Mac: local rendering, no uploads, no tracking |
 
 ## Steps
