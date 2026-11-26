@@ -196,7 +196,10 @@ step "hyperframes" npx -y skills add heygen-com/hyperframes --skill "${HF_SKILLS
 npx -y hyperframes telemetry disable >/dev/null 2>&1 || true
 
 # 3. Ponytail (smallest-change coding mode)
-step "ponytail" npx -y skills add DietrichGebert/ponytail --skill '*' -g -a "${AGENTS[@]}" -y
+# Only the main ponytail skill: its audit/debt/gain/help/review extras are for code reviews,
+# not video, and would add their descriptions to every session.
+step "ponytail" npx -y skills add DietrichGebert/ponytail --skill ponytail -g -a "${AGENTS[@]}" -y
+for old in ponytail-audit ponytail-debt ponytail-gain ponytail-help ponytail-review; do remove_skill "$old"; done
 
 # 4. grill-me + grilling from Matt Pocock (grill-me calls grilling, so both are needed)
 step "grill-me" npx -y skills add mattpocock/skills --skill grill-me --skill grilling -g -a "${AGENTS[@]}" -y

@@ -60,9 +60,9 @@ If a user asked you to install this repo, follow these steps exactly. The user m
 |---|---|---|
 | ffmpeg-skill | [kajisho5/ffmpeg-skill](https://github.com/kajisho5/ffmpeg-skill) | Cut, trim, caption and convert video/audio with FFmpeg |
 | HyperFrames (core skills) | [heygen-com/hyperframes](https://github.com/heygen-com/hyperframes) | Make animated videos from HTML. Free and open source (Apache-2.0), no licence fees |
-| ponytail | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | Smallest-change coding mode |
+| ponytail (main skill only) | [DietrichGebert/ponytail](https://github.com/DietrichGebert/ponytail) | Smallest-change coding mode: lean code and replies |
 | grill-me + grilling | [mattpocock/skills](https://github.com/mattpocock/skills) | Interviews you to sharpen a plan |
-| video-kickoff | this repo | Before any video task, asks if you'd like a few planning questions first |
+| video-kickoff | this repo | Before any video task, asks if you'd like a few planning questions first, and keeps the work lean on tokens (few frame checks, live preview instead of repeated renders, short replies) |
 | hyperframes-local-render | this repo | Keeps HyperFrames on your Mac: local rendering only, no uploads, usage tracking off |
 
 ## Manual install
