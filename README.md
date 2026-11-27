@@ -20,9 +20,11 @@ flowchart TD
     G -- "Yes" --> H["📝 A few easy questions<br/>purpose · length · look · music"]:::agent
     G -- "No, just start" --> S
     H --> S["🎞️ Two storyboards<br/>Option A vs Option B"]:::agent
-    S --> P{"👉 Pick A, B or a mix"}:::check
+    S --> P{"👉 Pick A, B or a mix<br/>+ want pictures?"}:::check
+    P -- "Yes, show pictures" --> V["🖼️ Picture storyboard<br/>one still per scene, made on your Mac"]:::setup
+    V -- "Approve" --> I
     P -- "Tweak it" --> S
-    P -- "Looks good" --> I{"🎬 What kind of video?"}:::check
+    P -- "Text is enough" --> I{"🎬 What kind of video?"}:::check
     I -- "Edit my clips" --> J["✂️ FFmpeg<br/>cut · trim · captions · music"]:::tool
     I -- "Animated video" --> K["🎨 HyperFrames<br/>titles · motion graphics · charts"]:::tool
     J --> L["🔒 Rendered on your Mac<br/>no uploads · no tracking"]:::safe
@@ -106,7 +108,7 @@ To install for other agents, set `VDO_AGENTS`, for example `VDO_AGENTS="codex cu
 
 Just describe the video you want. The agent asks whether you'd like it to interview you about the details first. Pick "yes" if you're not sure exactly what you want.
 
-Before building a new video, it shows two storyboards (scene-by-scene plans). Pick A, B, or a mix like "B, but with A's music", and it builds that one.
+Before building a new video, it shows two storyboards (scene-by-scene plans). Pick A, B, or a mix like "B, but with A's music". You can also ask to see it as pictures first: one still per scene, made on your Mac. Then it builds the video.
 
 ## Update
 

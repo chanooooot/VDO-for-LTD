@@ -55,8 +55,23 @@ Format:
 > | … same format … |
 >
 > Which one do you like: A, B, or a mix (for example "B, but with A's music")?
+>
+> Would you also like to see it as pictures before I build the video?
+> 1. No, the text is enough
+> 2. Yes, show pictures of the one I pick (takes a few minutes)
+> 3. Yes, show pictures of both options (takes longer)
 
-Wait for the answer. If they want changes, update only the chosen storyboard and show it again. Build the video only after they say it's good.
+Use a multiple-choice tool for these two questions if you have one. Wait for the answers. If they want changes, update only the chosen storyboard and show it again.
+
+### Picture storyboard (only if they chose 2 or 3)
+
+Everything stays on this Mac: no image-generation services, no HeyGen.
+- **Animated (HyperFrames) videos:** follow the storyboard recipe in the `hyperframes` skill (`references/storyboard.md`): pose each scene, take one still per scene with `npx hyperframes snapshot`, write the board, and show it in the Storyboard tab of `npx hyperframes preview`. Tell the user they can press **Approve** there, or just say "looks good".
+- **Videos made from their own footage:** take one frame from each planned clip with FFmpeg (`ffmpeg -ss <time> -i <clip> -frames:v 1 <scene>.png`) and show them in order with the scene text.
+
+One still per scene. For option 3, make the two boards one after the other and label them clearly A and B. If they want changes, redo only the frames they mention.
+
+Build the video only after they say the storyboard (text or pictures) is good.
 
 ## Working rules (every video task)
 
